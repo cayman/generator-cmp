@@ -1,0 +1,26 @@
+<div class="scrollContainer" >
+<div class="scrollArea" scroll-area>
+
+    <div class="columnBlockNoBorder" style="height: 144px;">
+        <div class="scrollBody">
+            <div class="titleLink" style="font-size: 18px;font-weight: bold; margin: 10px 0px 10px 0px">
+                Список запросов
+            </div>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <a class="btn btnBodyText"  ng-class="{ 'btn-info':params.type === 'my' }" ng-click="searchCauses('my')" title = "{{'my' | dictionary:'cause_types':'description'}}">{{'my' | dictionary:'cause_types'}}</a>
+                    <a class="btn btnBodyText"  ng-class="{ 'btn-info':params.type === 'active' }" ng-click="searchCauses('active')" title = "{{'active' | dictionary:'cause_types':'description'}}">{{'active' | dictionary:'cause_types'}}</a>
+                    <a class="btn btnBodyText" ng-class="{ 'btn-info':params.type === 'history' }" ng-click="searchCauses('history')" title = "{{'history' | dictionary:'cause_types':'description'}}">{{'history' | dictionary:'cause_types' }}</a>
+                </div>
+                <div class="btn-group" style="float: right;">
+                    <input type="text" class="middleInput" placeholder="Номер" style="vertical-align: top"  ng-model="params.num" on-enter="searchCauses()" />
+                    <button class="btn btnBodyText" ng-disabled="!params.num"  ng-class="{ 'btn-info': !!params.num }" ng-click="searchCauses()">Поиск</button>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="scrollShadow"></div>
+    </div>
+</div>
+</div>

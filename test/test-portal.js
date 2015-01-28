@@ -5,12 +5,12 @@ var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var os = require('os');
 
-describe('cmp:app', function () {
+describe('cmp:portal', function () {
   before(function (done) {
-    helpers.run(path.join(__dirname, '../app'))
+    helpers.run(path.join(__dirname, '../portal'))
       .inDir(path.join(os.tmpdir(), './temp-test'))
       .withOptions({ 'skip-install': true })
-      .withPrompt({
+      .withPrompts({
         someOption: true
       })
       .on('end', done);
@@ -18,10 +18,15 @@ describe('cmp:app', function () {
 
   it('creates files', function () {
     assert.file([
-      'bower.json',
-      'package.json',
+      '.gitignore',
       '.editorconfig',
-      '.jshintrc'
+      '.jshintrc',
+      'mklink.bat',
+      'package.json',
+      'cmp.json',
+      'config.yml',
+      'params.json',
+      'Gruntfile.js'
     ]);
   });
 });

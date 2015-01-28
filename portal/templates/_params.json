@@ -1,0 +1,16 @@
+{
+    "watch": "app.index",
+    "repo": "git+<%=repoUrl %>",
+    "server":{
+        "hostname": "*",
+        "port": 9000,
+        "proxies": [
+            {   "context": "/api",
+                "host": "localhost",
+                "port": 9100,
+                "https": false,
+                "changeOrigin": false
+            }
+        ]
+    }
+}

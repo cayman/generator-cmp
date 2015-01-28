@@ -1,0 +1,11 @@
+**/build
+/.idea
+**/*.iml
+**/bower_components
+**/node_modules
+**/build
+**/target
+**/logs
+/temp
+/app.*/bower.json
+bower.json
