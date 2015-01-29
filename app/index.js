@@ -12,14 +12,21 @@ module.exports = yeoman.generators.Base.extend({
     // Calling the super constructor is important so our generator is correctly set up
 
     yeoman.generators.Base.apply(this, arguments);
-    this.portal = this.config.get('portal');
+    var portal = this.config.get('portal');
+    var apps = this.config.get('apps');
 
-
-    if(!this.portal){
-      this.composeWith('cmp:portal',{options:{welcome:false}});
-    }else{
-      this.log(chalk.red('cmpPortal') + ' name: ' + this.portal);
+    if (portal) {
+      this.log(chalk.red('cmpPortal') + ': ' + portal + ' (portal:' + portal + ')');
+    } else {
+      this.composeWith('cmp:portal', {options: {welcome: false}});
     }
+
+    if(apps) {
+      for (var i = 0; i < apps.length; i++) {
+        this.log(chalk.red('cmpApp') + ': ' + apps[i] + ' (app:' + apps[i] + ')');
+      }
+    }
+
   },
 
   initializing: function () {
@@ -30,22 +37,20 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
 
     var template = this.config.get('template');
-
+    var apps = this.config.get('apps') || [];
 
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the ' + chalk.red('cmpApp') + ' as Single Page Application generator!'
     ));
 
-    var apps = this.config.get('apps') || [];
-
-    function existApp(name){
-      for (var i = 0; apps.length; i++) {
+    function existApp(name,found,notFound){
+      for (var i = 0; i < apps.length; i++) {
         if (apps[i] === name) {
-          return true;
+          return found;
         }
       }
-      return false;
+      return notFound;
     }
 
     var prompts = [
@@ -54,9 +59,9 @@ module.exports = yeoman.generators.Base.extend({
         name: 'appName',
         message: 'Enter the name of the application (\'name\'.html)',
         validate: function (name) {
-          return !existApp(name) || 'such app already exists';
+          return existApp(name,'such app already exists', true );
         },
-        default: existApp('index') ? null : 'index'
+        default: existApp('index', undefined, 'index' )
       },
       {
         type: 'confirm',
