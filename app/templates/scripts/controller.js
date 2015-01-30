@@ -47,13 +47,13 @@ _<%=cmp %>App.controller('ListController', function ($log, $scope, $state, $stat
     loadModel($scope.params);
 
     //Scroll result
-    scrollMod.subscribeResultOffset(function () {
-      if ($scope.loaded === false) {
-        $scope.$apply(function () {
-          loadModel();
-        });
-      }
-    });
+    //scrollMod.subscribeResultOffset(function () {
+    //  if ($scope.loaded === false) {
+    //    $scope.$apply(function () {
+    //      loadModel();
+    //    });
+    //  }
+    //});
 
     $scope.selectUser = function(item){
       $log.debug('selectUser');

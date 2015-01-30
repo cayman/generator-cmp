@@ -19,19 +19,18 @@
                     <th>Дата <br/> создания</th>
                     <th>Тип</th>
                     <th>Процесс</th>
-                    <th ng-hide="params.type === 'history'">Наименование текущей процедуры</th>
+                    <th>Наименование текущей процедуры</th>
                     <th>Дата <br/> начала</th>
 
-                    <th ng-hide="params.type === 'history'">Планируемая дата завершения</th>
-                    <th ng-show="params.type === 'history'">Дата завершения</th>
+                    <th>Планируемая дата завершения</th>
+                    <th>Дата завершения</th>
 
-                    <th ng-show="params.type === 'active' || params.type === 'system'">Ответственный</th>
-                    <th ng-show="params.type === 'active'">Действие</th>
+                    <th>Ответственный</th>
+                    <th>Действие</th>
 
                 </tr>
                 <tr ng-repeat="item in model.items">
                     <td>
-                        <a ng-show="item.guid" ng-href="{{packageUrl}}/{{ item.guid }} ">{{ item.regNumber }}</a>
                         <span ng-hide="item.guid">{{ item.regNumber }}</span>
                     </td>
                     <td>

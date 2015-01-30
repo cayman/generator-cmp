@@ -5,6 +5,7 @@ var yosay = require('yosay');
 var os = require('os');
 
 module.exports = yeoman.generators.Base.extend({
+
   initializing: function () {
     this.pkg = require('../package.json');
   },
@@ -23,6 +24,11 @@ module.exports = yeoman.generators.Base.extend({
         name: 'portalName',
         message: 'Enter the name of the portal',
         default: this.appname
+      },
+      {
+        type: 'input',
+        name: 'description',
+        message: 'Enter the description of the portal',
       },
       {
         type: 'input',
@@ -48,16 +54,32 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       this.portal = props.portalName;
       this.portalName = 'portal.' + this.portal;
+      this.description = props.description;
       this.repoUrl = props.repoUrl;
       this.karma = props.karma;
       this.deploy = props.deploy;
 
       // Save user configuration options to .yo-rc.json file
       this.config.set('portal',this.portal);
+      this.config.set('title',this.description);
       this.config.save();
 
       done();
     }.bind(this));
+  },
+
+
+  configuring: function () {
+    var apps = this.config.get('apps');
+
+
+    this.template('_cmp.json','cmp.json',{
+      portalName : this.portalName,
+      appList:apps.map(function (app){
+        return '"app.'+app +'": "./app.'+app +'"';
+      }).join(",\n\t")
+    });
+
   },
 
   writing: {
@@ -71,7 +93,7 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     portal: function () {
-      this.template('_cmp.json','cmp.json');
+
       this.template('_config.yml','config.yml');
       this.template('_params.json','params.json');
       this.copy('_Gruntfile.js','Gruntfile.js');

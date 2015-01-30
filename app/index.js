@@ -2,23 +2,24 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var os = require('os');
+var fs = require('fs');
 
 
 
 module.exports = yeoman.generators.Base.extend({
 
   constructor: function () {
-    // Calling the super constructor is important so our generator is correctly set up
 
+    // Calling the super constructor is important so our generator is correctly set up
     yeoman.generators.Base.apply(this, arguments);
+
     var portal = this.config.get('portal');
     var apps = this.config.get('apps');
 
     if (portal) {
       this.log(chalk.red('cmpPortal') + ': ' + portal + ' (portal:' + portal + ')');
     } else {
-      this.composeWith('cmp:portal', {options: {welcome: false}});
+      this.composeWith('cmp:portal', {options: {welcome: false}}, { link:'strong'});
     }
 
     if(apps) {
@@ -30,12 +31,13 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   initializing: function () {
-    this.pkg = require('../package.json');
+
   },
 
   prompting: function () {
     var done = this.async();
 
+    var title = this.config.get('title');
     var template = this.config.get('template');
     var apps = this.config.get('apps') || [];
 
@@ -64,6 +66,19 @@ module.exports = yeoman.generators.Base.extend({
         default: existApp('index', undefined, 'index' )
       },
       {
+        type: 'input',
+        name: 'title',
+        message: 'Enter the title the application',
+        default: title || null
+      },
+      {
+        type: 'input',
+        name: 'template',
+        message: 'Enter the name of the template (template.\'name\')',
+        default: template || 'base'
+      }
+      ,
+      {
         type: 'confirm',
         name: 'angular',
         message: 'Would you use AngularJS framework?',
@@ -71,24 +86,40 @@ module.exports = yeoman.generators.Base.extend({
       }
     ];
 
-
-
     this.prompt(prompts, function (props) {
 
       this.cmp = props.appName;
       this.cmpName = 'app.'+this.cmp;
+      this.title = 'app.'+this.title;
       this.angular = props.angular;
+      this.templateName = 'template.'+ props.template;
       this.src = this.cmpName + '/src';
 
       // Save user configuration options to .yo-rc.json file
       apps.push(this.cmp);
+      this.config.set('title',this.title);
       this.config.set('apps',apps);
+      this.config.set('template',props.template);
       this.config.save();
 
       done();
     }.bind(this));
   },
 
+  configuring: function () {
+    var cmpJsonPath = this.destinationPath('cmp.json');
+    if(fs.existsSync(cmpJsonPath)){
+        var portalCmp = require(cmpJsonPath);
+        portalCmp.dependencies[this.cmpName] = './' + this.cmpName;
+        this.write(cmpJsonPath, JSON.stringify(portalCmp, null, 2));
+    }
+    var paramsJsonPath = this.destinationPath('params.json');
+    if(fs.existsSync(paramsJsonPath)){
+      var gruntParams = require(paramsJsonPath);
+      gruntParams.watch  =  this.cmpName;
+      this.write(paramsJsonPath, JSON.stringify(gruntParams, null, 2));
+    }
+  },
 
   writing: {
     cmp: function () {
